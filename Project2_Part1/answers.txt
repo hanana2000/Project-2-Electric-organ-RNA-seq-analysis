@@ -10,7 +10,9 @@ reads with base qualities of 32 or above are good for RNA seq analysis.
 
 pixi init Project2_QAA
 pixi add fastqc cutadapt trimmomatic
-prefetch <SRR IDs>
-fasterq dump <SRR IDS>
+pixi add sra-tools
+
+pixi run prefetch <SRR IDs>
+pixi run fasterq dump <SRR IDS>
 pixi run fastqc *.fastq -o /projects/bgmp/hankap/bioinfo/Bi623/
 
