@@ -1,0 +1,8 @@
+• What is the overall quality of your libraries?
+all 4 fastq files have an average read quality of above 32 for all positions in the reads. 
+near the ends of the reads (around base 140), the quality error bars bleed into scores of 28 and below, 
+but this is expected with the ends of reads. 
+
+• Are these libraries high enough quality to use for a RNA seq
+analysis?
+reads with base qualities of 32 or above are good for RNA seq analysis. 
