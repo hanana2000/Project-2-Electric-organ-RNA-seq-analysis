@@ -39,7 +39,7 @@ CCAAAGAGCCCAACAGTTTTTCAGCTCCCTTCCTGCTGTCAATGAACTGCCCTTCTGGAATAGCAGCAGGGTTGAGGATG
 CTCTTTGGGCTGCTATAATGGAAACCGGTATGCACCCACTAATTAACCTACCAGATATTTTTGGATAGAATCAGCCTTACGCTACAACGCTTTTGTGCGACGGAGCATGTGAAAAAGATCGGAAGAGCACACGTCTGAACTCCAGTCACG
 ```
 This image shows that in SRR25630305_1.fastq the R1 adapter sequence is found at the right end of the sequences (3' end). 
-![alt text](image.png)
+![alt text](images/image.png)
 
 ```bash
 [hankap@login3 Project2_QAA]$ grep "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT" ../SRR25630305_2.fastq | head 
@@ -55,7 +55,7 @@ GATGGATTGAGGATGTTATTGTTATAGTAAGGGAGATGATGACTGATTGAGGGTGTTATTGTTATAGTAAGGGAGATGAT
 GCCGTTCTTAGTTGGTGGAGCGATTTGTCTGGTTAATTCCGATAACGAACGAGACTCCGACATGCTAACTAGTTACGGGACCCGGTGCGGTCGCCGTACAACTTCTTAGAGGGAGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTTGTT
 ``` 
 This image shows that in SRR25630305_2.fastq the R2 adapter sequence is found at the right end of the sequences (3' end).
-![alt text](image-1.png)
+![alt text](images/image-1.png)
 
 ```bash 
 [hankap@login3 Project2_QAA]$ grep "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA" ../SRR25630397_1.fastq | head
@@ -71,7 +71,7 @@ GCGGGAGGAAATTTTATTGGAGCGAGGAGCGGTGTTTAGCGGAGCGGCTTAGTGCGAATTAGAGCGGAGGAGCGGGCGGA
 GGAAATAGTTCTCCCTTCTTAATCCACCAGGTTTGCCATAGAAAGCCTTTTGATAATGTTTTCATACAGAATATTCATGTAGTTGCCATACATTTTGGCAGAATGACCAACCTGTCGAGATCGGAAGAGCACACGTCTGAACTCCAGTCA
 ```
 This image shows that in SRR25630397_1.fastq the R1 adapter sequence is found at the right end of the sequences (3' end). 
-![alt text](image-2.png)
+![alt text](images/image-2.png)
 
 ```bash 
 [hankap@login3 Project2_QAA]$ grep "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT" ../SRR25630397_2.fastq | head 
@@ -87,7 +87,7 @@ CCGAACTGCGGTAGGCAGTGTACTCACTGGGTCTTACGTTCTCCGAAAGCGAATCGTAAACCATCTGTCAAAATGGTGAA
 GAACAGCTAAATTTAAGGCATATCTTTTACTGTGTGAGTGAAAAGTACTCTGATGCTGTCCGGATGCCCAGTCGTCTTGCATCCTCTGTGTCCTGTTCAGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTTGTGCTCGGTGGGGGGGGT
 ```
 This image shows that in SRR25630397_2.fastq the R2 adapter sequence is found at the right end of the sequences (3' end).
-![alt text](image-3.png)
+![alt text](images/image-3.png)
 
 R1: `AGATCGGAAGAGCACACGTCTGAACTCCAGTCA`
 R2: `AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT`
@@ -160,8 +160,6 @@ SRR25630397_2:
 ```bash 
 pixi run trimmomatic PE ../Project2_QAA/SRR25630305_1_cut.fastq ../Project2_QAA/SRR25630305_2_cut.fastq cut_trimmed/SRR25630305_cut_fpair.fq.gz cut_trimmed/SRR25630305_1_cut_funpair.fq.gz cut_trimmed/SRR25630305_cut_rpair.fq.gz cut_trimmed/SRR25630305_cut_runpair.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:True LEADING:3 TRAILING:3 SLIDINGWINDOW:5:15 MINLEN:35
 
-SRR25630397_1_cut.fastq
-
 pixi run trimmomatic PE ../Project2_QAA/SRR25630397_1_cut.fastq ../Project2_QAA/SRR25630397_2_cut.fastq cut_trimmed/SRR25630397_cut_fpair.fq.gz cut_trimmed/SRR25630397_1_cut_funpair.fq.gz cut_trimmed/SRR25630397_cut_rpair.fq.gz cut_trimmed/SRR25630397_cut_runpair.fq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:True LEADING:3 TRAILING:3 SLIDINGWINDOW:5:15 MINLEN:35
 
 ```
@@ -183,5 +181,17 @@ graphs of trimmed lengths for R1 and R2 (for both samples):
 [Rmd](./fastq_len_dist.Rmd)  
 [PDF](./fastq_len_dist.pdf)
 
+for SRR25630305: 
+![alt text](images/image-4.png)
+
+
+for SRR25630397: 
+![alt text](images/image-5.png)
+
+The untrimmed read length is 150, so the tall bars on the far right represent untrimmed reads. 
+For both samples, it looks like there are slightly more R1 untrimmed reads than R2 (more forward reads were left untrimmed than reverse reads). 
+I would expect forward and reverse reads to be plotted at a similar rate, because in the fastqc reports, the illumina adapter graph showed a similar level of adapters for both forward and reverse reads. After 90 bp, the adapters were detected at a highest rate of ~12% for SRR25630305 (for both F and R). After 104 bp, the adapters were detected at a highest rate of ~8% for SRR25630397 (for both F and R). 
+
+[Fastqc HTML docs](../Project2_Part1/fastqc_html_reports)
 
 9.  Bonus - Run `FastQC` on your trimmed data. Comment on differences you observe between the trimmed and untrimmed data. Include any figures needed to support your conclusions.
