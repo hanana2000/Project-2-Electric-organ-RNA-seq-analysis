@@ -1,0 +1,58 @@
+---
+title: "fastq_len_dist"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r}
+SRR25630305_R1 = read.table("./dist_SRR25630305_cut_fpair.txt")
+SRR25630305_R2 = read.table("./dist_SRR25630305_cut_rpair.txt")
+
+SRR25630305 = full_join(SRR25630305_R1, SRR25630305_R2, by = "V2") %>% 
+  rename(R1 = V1.x, R2 = V1.y, Length = V2) %>%
+  select(Length, R1, R2) %>%
+  pivot_longer(
+    cols = c(R1, R2)
+  )
+SRR25630305
+
+
+ggplot(SRR25630305, aes(x = Length, y = value,  fill = name)) + 
+  geom_col(position = "dodge", width = 1) + 
+  ylab("Frequency") +
+  xlab("Length")
+
+
+
+```
+
+
+```{r}
+SRR25630397_R1 = read.table("./dist_SRR25630397_cut_fpair.txt")
+SRR25630397_R2 = read.table("./dist_SRR25630397_cut_rpair.txt")
+
+SRR25630397 = full_join(SRR25630397_R1, SRR25630397_R2, by = "V2") %>% 
+  rename(R1 = V1.x, R2 = V1.y, Length = V2) %>%
+  select(Length, R1, R2) %>%
+  pivot_longer(
+    cols = c(R1, R2)
+  )
+SRR25630397
+
+
+ggplot(SRR25630397, aes(x = Length, y = value,  fill = name)) + 
+  geom_col(position = "dodge", width = 1) + 
+  ylab("Frequency") +
+  xlab("Length")
+
+```
+
+
+
+
