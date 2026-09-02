@@ -186,11 +186,13 @@ graphs of trimmed lengths for R1 and R2 (for both samples):
 [Rmd](./fastq_len_dist.Rmd)  
 [PDF](./fastq_len_dist.pdf)
 
-for SRR25630305: 
+for SRR25630305 (with and without log scale): 
 ![alt text](images/image-4.png)
+![alt text](images/log_image.png)
 
-for SRR25630397: 
+for SRR25630397 (with and without log scale): 
 ![alt text](images/image-5.png)
+![alt text](images/log_image2.png)
 
 The untrimmed read length is 150, so the tall bars on the far right represent untrimmed reads. 
 For both samples, it looks like there are slightly more R1 untrimmed reads than R2 (more forward reads were left untrimmed than reverse reads). 
