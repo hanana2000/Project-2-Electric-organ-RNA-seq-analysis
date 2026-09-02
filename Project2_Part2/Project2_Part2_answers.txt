@@ -1,6 +1,7 @@
 
 NOTE: 
 THIS FILE IS THE SAME AS Project2_Part2/Project2_Part2_answers.md IN TXT FORMAT. 
+Markdown file looks much nicer and is easier to read. 
 
 
 ## Part 2 Adaptor trimming comparison, DUE 9/1
