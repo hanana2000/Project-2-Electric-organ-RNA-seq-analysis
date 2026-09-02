@@ -184,7 +184,6 @@ graphs of trimmed lengths for R1 and R2 (for both samples):
 for SRR25630305: 
 ![alt text](images/image-4.png)
 
-
 for SRR25630397: 
 ![alt text](images/image-5.png)
 
