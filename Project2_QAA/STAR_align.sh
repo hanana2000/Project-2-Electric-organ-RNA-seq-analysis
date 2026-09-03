@@ -15,26 +15,42 @@
 # source ~/.bashrc
 # add 'alias <desired command alias>='squeue (or whatever command it is) <flags and options>'
 
-genomedir=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campyDB.STAR.2.7.11b
+genomedir=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/campyDB.STAR.2.7.11b
 gtffile=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campylomormyrus.gtf
 fafile=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campylomormyrus.fasta
 
-file1=/projects/bgmp/shared/Bi621/dre_WT_ovar12_R1.qtrim.fq.gz
-file2=/projects/bgmp/shared/Bi621/dre_WT_ovar12_R2.qtrim.fq.gz
+file1=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630305_cut_fpair.fq.gz
+file2=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630305_cut_rpair.fq.gz
 
+file3=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630397_cut_fpair.fq.gz
+file4=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630397_cut_rpair.fq.gz
+
+
+# /usr/bin/time -v pixi run STAR \
+#  --runThreadN 8 \
+#  --runMode genomeGenerate \
+#  --genomeDir $genomedir \
+#  --genomeFastaFiles $fafile \
+#  --sjdbGTFfile $gtffile
 
 /usr/bin/time -v pixi run STAR \
  --runThreadN 8 \
- --runMode genomeGenerate \
+ --runMode alignReads \
+ --outFilterMultimapNmax 3 \
+ --outSAMunmapped Within KeepPairs \
+ --alignIntronMax 1000000 --alignMatesGapMax 1000000 \
+ --readFilesCommand zcat \
+ --readFilesIn $file1 $file2 \
  --genomeDir $genomedir \
- --genomeFastaFiles $fafile \
- --sjdbGTFfile $gtffile
+ --outFileNamePrefix yayay_
 
-# /usr/bin/time -v pixi run STAR --runThreadN 8 --runMode alignReads \
-#  --outFilterMultimapNmax 3 \
-#  --outSAMunmapped Within KeepPairs \
-#  --alignIntronMax 1000000 --alignMatesGapMax 1000000 \
-#  --readFilesCommand zcat \
-#  --readFilesIn $file1 $file2 \
-#  --genomeDir $genomedir \
-#  --outFileNamePrefix yayay_
+ /usr/bin/time -v pixi run STAR \
+ --runThreadN 8 \
+ --runMode alignReads \
+ --outFilterMultimapNmax 3 \
+ --outSAMunmapped Within KeepPairs \
+ --alignIntronMax 1000000 --alignMatesGapMax 1000000 \
+ --readFilesCommand zcat \
+ --readFilesIn $file3 $file4 \
+ --genomeDir $genomedir \
+ --outFileNamePrefix yayay_
