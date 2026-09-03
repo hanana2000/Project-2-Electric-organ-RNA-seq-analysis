@@ -70,7 +70,7 @@ awk '$1!~"__" {s+=$2} {sum+=$2} END {print s/sum}' SRR25630397_rev.txt
 for SRR25630305, the stranded run mapped 2.56% of reads, while the reverse run mapped 43.65% of reads. 
 for SRR25630397, the stranded run mapped 2.10% of reads, while the reverse run mapped 55.31% of reads.
 
-for both samples I would run the reverse stranded command, as there are significantly more reads mapped. 
+for both samples I would run the reverse stranded command, as there are significantly more reads mapped. The library is strand specific, because if it were unstranded, then both types of runs would get the same percentage mapped. 
 
 
 16. BONUS - Turn your commands from this assignment into a script with a loop going through your two SRA files
