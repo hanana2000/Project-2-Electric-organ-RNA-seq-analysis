@@ -108,43 +108,43 @@ pixi run cutadapt -a AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -o SRR25630397_2_cut.fast
 ### proportion of reads trimmed 
 
 ```bash 
-[hankap@login3 Project2_QAA]$ grep "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA" ../SRR25630305_1.fastq | wc -l 
-190332
-[hankap@login3 Project2_QAA]$ wc -l ../SRR25630305_1.fastq
-16848304 ../SRR25630305_1.fastq
-# 190332/(16848304/4) = 0.0451872188 = 4.52% of reads trimmed 
+=== Summary ===
 
-[hankap@login3 Project2_QAA]$ grep "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT" ../SRR25630305_2.fastq | wc -l 
-64647
-[hankap@login3 Project2_QAA]$ wc -l ../SRR25630305_2.fastq 
-16848304 ../SRR25630305_2.fastq
-# 64647/(16848304/4) = 0.0153480137 = 1.53% of reads trimmed 
+Total reads processed:               4,212,076
+Reads with adapters:                   767,237 (18.2%)
+Reads written (passing filters):     4,212,076 (100.0%) 
 
-[hankap@login3 Project2_QAA]$ grep "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA" ../SRR25630397_1.fastq | wc -l 
-117906
-[hankap@login3 Project2_QAA]$ wc -l ../SRR25630397_1.fastq
-22493652 ../SRR25630397_1.fastq
-# 117906/(22493652/4) = 0.0209669822 = 2.10% of reads trimmed 
+=== Summary ===
 
-[hankap@login3 Project2_QAA]$ grep "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT" ../SRR25630397_2.fastq | wc -l 
-39116
-[hankap@login3 Project2_QAA]$ wc -l ../SRR25630397_2.fastq
-22493652 ../SRR25630397_2.fastq
-# 39116/(22493652/4) = 0.006955918051901933 = .696% of reads trimmed 
+Total reads processed:               5,623,413
+Reads with adapters:                   704,912 (12.5%)
+Reads written (passing filters):     5,623,413 (100.0%)
+
+=== Summary ===
+
+Total reads processed:               4,212,076
+Reads with adapters:                   337,673 (8.0%)
+Reads written (passing filters):     4,212,076 (100.0%)
+
+=== Summary ===
+
+Total reads processed:               5,623,413
+Reads with adapters:                   728,377 (13.0%)
+Reads written (passing filters):     5,623,413 (100.0%)
 ```
 
 ```
 SRR25630305_1: 
-190332/(16848304/4) = 0.0451872188 = 4.52% of reads trimmed 
+18.2% of reads trimmed 
 
 SRR25630305_2:
-64647/(16848304/4) = 0.0153480137 = 1.53% of reads trimmed 
+8.0% of reads trimmed 
 
 SRR25630397_1:
-117906/(22493652/4) = 0.0209669822 = 2.10% of reads trimmed 
+12.5% of reads trimmed 
 
 SRR25630397_2:
-39116/(22493652/4) = 0.006955918051901933 = .696% of reads trimmed 
+13.0% of reads trimmed 
 
 ```
 
@@ -190,8 +190,8 @@ for SRR25630397 (with and without log scale):
 ![alt text](images/log_image2.png)
 
 The untrimmed read length is 150, so the tall bars on the far right represent untrimmed reads. 
-For both samples, it looks like there are slightly more R1 untrimmed reads than R2 (more forward reads were left untrimmed than reverse reads). 
-I would expect forward and reverse reads to be plotted at a similar rate, because in the fastqc reports, the illumina adapter graph showed a similar level of adapters for both forward and reverse reads. After 90 bp, the adapters were detected at a highest rate of ~12% for SRR25630305 (for both F and R). After 104 bp, the adapters were detected at a highest rate of ~8% for SRR25630397 (for both F and R). 
+For the first sample, it looks like there are slightly more R1 untrimmed reads than R2 (more forward reads were left untrimmed than reverse reads). 
+I would expect forward and reverse reads to be plotted at a similar rate, because in the fastqc reports, the illumina adapter graph showed a similar level of adapters for both forward and reverse reads. After 90 bp, the adapters were detected at a highest rate of ~16% for SRR25630305 (for both F and R). After 104 bp, the adapters were detected at a highest rate of ~9% for SRR25630397 (for both F and R). This generally matches with the actual values. 
 
 [Fastqc HTML docs](../Project2_Part1/fastqc_html_reports)
 
