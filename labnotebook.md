@@ -117,7 +117,7 @@ need to convert gff to gtf:
 [hankap@login3 Project2_Part3]$ cd ../Project2_QAA/
 [hankap@login3 Project2_QAA]$ pixi add agat 
 
-pixi run agat_convert_sp_gff2gtf.pl --gff ../Project2_Part3/campylomormyrus.gff -o ../Project2_Part3/campylomormyrus.gtf
+[hankap@login3 Project2_Part3] pixi run agat_convert_sp_gff2gtf.pl --gff ../Project2_Part3/campylomormyrus.gff -o ../Project2_Part3/campylomormyrus.gtf
 ```
 
 output to terminal: 
@@ -202,12 +202,86 @@ Job done! Bye Bye!
 
 ```
 
-cd into the working directory (not pixi dir) and run the STAR_align.sh script twice, once with the genome generate command uncommented out, then with the alignment command uncommented:
+run the STAR_align.sh script twice, once with the genome generate command uncommented out, then with the alignment commands uncommented:
 
 [STAR_align.sh](Project2_QAA/STAR_align.sh)
 
-```bash 
-[hankap@n0097 Project2_Part3]$ chmod 755 STAR_align.sh 
+```bash
+#!/bin/bash
+#SBATCH --account=bgmp                    # REQUIRED: which account to use
+#SBATCH --partition=bgmp                  # REQUIRED: which partition to use
+#SBATCH --cpus-per-task=8                 # optional: number of cpus, default is 1
+#SBATCH --job-name=spades_k77             # optional: job name
+#SBATCH --time=1:00:00                    # optional: time before timesout 
+
+# scancel <jobid>
+# sbatch 
+# squeue -u hankap
+# history | tail -10
+# sbatch starbash.sh
+
+# nano ~/.bashrc
+# source ~/.bashrc
+# add 'alias <desired command alias>='squeue (or whatever command it is) <flags and options>'
+
+genomedir=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/campyDB.STAR.2.7.11b
+gtffile=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campylomormyrus.gtf
+fafile=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campylomormyrus.fasta
+
+file1=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630305_cut_fpair.fq.gz
+file2=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630305_cut_rpair.fq.gz
+
+file3=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630397_cut_fpair.fq.gz
+file4=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630397_cut_rpair.fq.gz
+
+
+# /usr/bin/time -v pixi run STAR \
+#  --runThreadN 8 \
+#  --runMode genomeGenerate \
+#  --genomeDir $genomedir \
+#  --genomeFastaFiles $fafile \
+#  --sjdbGTFfile $gtffile
+
+/usr/bin/time -v pixi run STAR \
+ --runThreadN 8 \
+ --runMode alignReads \
+ --outFilterMultimapNmax 3 \
+ --outSAMunmapped Within KeepPairs \
+ --alignIntronMax 1000000 --alignMatesGapMax 1000000 \
+ --readFilesCommand zcat \
+ --readFilesIn $file1 $file2 \
+ --genomeDir $genomedir \
+ --outFileNamePrefix yayay_
+
+ /usr/bin/time -v pixi run STAR \
+ --runThreadN 8 \
+ --runMode alignReads \
+ --outFilterMultimapNmax 3 \
+ --outSAMunmapped Within KeepPairs \
+ --alignIntronMax 1000000 --alignMatesGapMax 1000000 \
+ --readFilesCommand zcat \
+ --readFilesIn $file3 $file4 \
+ --genomeDir $genomedir \
+ --outFileNamePrefix yayay_
 
 ```
+
+```bash 
+[hankap@login3 Project2_QAA]$ chmod 755 STAR_align.sh 
+[hankap@login3 Project2_QAA]$ sbatch STAR_align.sh 
+```
+
+slurm output for genome db generation: 
+```bash 
+Command being timed: "pixi run STAR --runThreadN 8 --runMode genomeGenerate --genomeDir /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campyDB.STAR.2.7.11b --genomeFastaFiles /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campylomormyrus.fasta --sjdbGTFfile /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campylomormyrus.gtf"
+	User time (seconds): 1225.23
+	System time (seconds): 7.08
+	Percent of CPU this job got: 358%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 5:44.03
+	Maximum resident set size (kbytes): 23057984
+
+```
+the genome generation took about 6 minutes and used 23MB memory
+
+
 
