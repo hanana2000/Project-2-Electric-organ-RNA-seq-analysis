@@ -42,7 +42,7 @@ file4=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analy
  --readFilesCommand zcat \
  --readFilesIn $file1 $file2 \
  --genomeDir $genomedir \
- --outFileNamePrefix yayay_
+ --outFileNamePrefix SRR25630305
 
  /usr/bin/time -v pixi run STAR \
  --runThreadN 8 \
@@ -53,4 +53,4 @@ file4=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analy
  --readFilesCommand zcat \
  --readFilesIn $file3 $file4 \
  --genomeDir $genomedir \
- --outFileNamePrefix yayay_
+ --outFileNamePrefix SRR25630397
