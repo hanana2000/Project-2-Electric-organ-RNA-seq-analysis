@@ -11,13 +11,13 @@ Create a folder called Project2_Part3 on your git repo. **Upload all of your ans
 
 [Record details on how you installed these packages and what version they are to your lab notebook]
 
-all commands and script info is located at [Lab Notebook](/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/labnotebook.md)
+all commands and script info is located at [Lab Notebook](../labnotebook.md)
 
 11. Download the publicly available *Campylomormyrus compressirostris* genome fasta and gff file from [Dryad](https://datadryad.org/dataset/doi:10.5061/dryad.c59zw3rcj) and generate an alignment database from it. If the download fails, the files are available here: `/projects/bgmp/shared/Bi623/Project2/campylomormyrus.fasta`, `/projects/bgmp/shared/Bi623/Project2/campylomormyrus.gff`. Align the reads to your *C. compressirostris* database using a splice-aware aligner. Use the settings specified in PS8 from Bi621.
 
 > [!IMPORTANT] You will need to use gene models to perform splice-aware alignment, see PS8 from Bi621 to remind yourself. You may need to convert the gff file into a gtf file for this to work successfully.
 
-[STAR bash script](Project2_QAA/STAR_align.sh)
+[STAR bash script](../Project2_QAA/STAR_align.sh)
 
 13. Using your script from PS8 in Bi621, report the number of mapped and unmapped reads from each of your 2 SAM files. Make sure that your script is looking at the bitwise flag to determine if reads are primary or secondary mapping (update/fix your script if necessary).
 
@@ -35,7 +35,7 @@ there were 19450210 total reads in the file (including repeats)
 
 14. Count reads that map to features using `htseq-count`. You should run htseq-count twice: once with `--stranded=yes` and again with `--stranded=reverse`. Use default parameters otherwise. You may need to use the `-i` parameter for this run.
 
-[htseq bash](Project2_QAA/htseq.sh)
+[htseq bash](../Project2_QAA/htseq.sh)
 
 
 15. Demonstrate convincingly whether or not the data are from "strand-specific" RNA-Seq libraries **and** which `stranded=` parameter should you use for counting your reads for a future differential gene expression analyses. Include any commands/scripts used. Briefly describe your evidence, using quantitative statements (e.g. "I propose that these data are/are not strand-specific, because X% of the reads are y, as opposed to z."). This [kit](https://www.revvity.com/product/nex-rapid-dir-rna-seq-kit-2-0-8rxn-nova-5198-01) was used during library preparation. This [paper](https://academic.oup.com/bfg/article/19/5-6/339/5837822) may provide helpful information.
