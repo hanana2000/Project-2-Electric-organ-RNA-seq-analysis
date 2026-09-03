@@ -86,4 +86,128 @@ zcat cut_trimmed/SRR25630397_cut_rpair.fq.gz | sed -n '2~4p' | awk '{print lengt
 
 ```
 
+# Project2_Part3
+
+```bash 
+cd Project2_QAA/
+pixi add Star
+pixi add Samtools
+pixi add NumPy
+pixi add Matplotlib
+pixi add HTSeq
+```
+
+
+# Project2_Part3
+
+from PS8 Bi621, copy pasted STAR bash script. 
+
+downloaded gff and fasta files from [Dryad](https://datadryad.org/dataset/doi:10.5061/dryad.c59zw3rcj), and then used scp to copy the zip file to talapas: 
+```bash 
+scp .\doi_10_5061_dryad_c59zw3rcj__v20230125.zip hankap@login2.talapas.uoregon.edu:/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3
+```
+
+then on talapas, unzipped the file: 
+```bash 
+unzip doi_10_5061_dryad_c59zw3rcj__v20230125.zip
+```
+
+need to convert gff to gtf: 
+```bash 
+[hankap@login3 Project2_Part3]$ cd ../Project2_QAA/
+[hankap@login3 Project2_QAA]$ pixi add agat 
+
+pixi run agat_convert_sp_gff2gtf.pl --gff ../Project2_Part3/campylomormyrus.gff -o ../Project2_Part3/campylomormyrus.gtf
+```
+
+output to terminal: 
+```bash 
+[hankap@n0097 Project2_QAA]$ pixi run agat_convert_sp_gff2gtf.pl --gff ../Project2_Part3/campylomormyrus.gff -o ../Project2_Part3/campylomormyrus.gtf
+ WARN cache for Repodata at /home/hankap/.cache/rattler/cache/repodata is on a network/parallel filesystem (NFS/SMB/FUSE/BeeGFS/Lustre/GPFS/CephFS), redirected to /tmp/pixi-cache-hankap/repodata for this run. Set [cache.repodata] in config.toml or PIXI_CACHE_DIR to override, or [cache.netfs-redirect] = "never" to keep the original path.
+
+ ------------------------------------------------------------------------------
+|   Another GFF Analysis Toolkit (AGAT) - Version: v1.7.0                      |
+|   https://github.com/NBISweden/AGAT                                          |
+|   National Bioinformatics Infrastructure Sweden (NBIS) - www.nbis.se         |
+ ------------------------------------------------------------------------------
+Using standard /gpfs/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/.pixi/envs/default/lib/perl5/site_perl/auto/share/dist/AGAT/feature_levels.yaml file
+GTF version relax selected from the agat config file.
+File ../Project2_Part3/campylomormyrus.gtf already exist.
+[hankap@n0097 Project2_QAA]$ pixi run agat_convert_sp_gff2gtf.pl --gff ../Project2_Part3/campylomormyrus.gff -o ../Project2_Part3/campylomormyrus.gtf
+ WARN cache for Repodata at /home/hankap/.cache/rattler/cache/repodata is on a network/parallel filesystem (NFS/SMB/FUSE/BeeGFS/Lustre/GPFS/CephFS), redirected to /tmp/pixi-cache-hankap/repodata for this run. Set [cache.repodata] in config.toml or PIXI_CACHE_DIR to override, or [cache.netfs-redirect] = "never" to keep the original path.
+
+ ------------------------------------------------------------------------------
+|   Another GFF Analysis Toolkit (AGAT) - Version: v1.7.0                      |
+|   https://github.com/NBISweden/AGAT                                          |
+|   National Bioinformatics Infrastructure Sweden (NBIS) - www.nbis.se         |
+ ------------------------------------------------------------------------------
+Using standard /gpfs/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/.pixi/envs/default/lib/perl5/site_perl/auto/share/dist/AGAT/feature_levels.yaml file
+GTF version relax selected from the agat config file.
+=> Output format will be GTFrelax.
+                                        
+                                       
+                          ------ Start parsing ------                           
+-------------------------- parse options and metadata --------------------------
+Accessing the feature_levels YAML file
+=> Attribute used to group features when no Parent/ID relationship exists (i.e common tag):
+        * locus_tag
+        * gene_id
+=> merge_loci option activated
+=> FASTA within the file will be thrown away!
+=> Machine information:
+        This script is being run by perl v5.32.1
+        Bioperl location being used: /gpfs/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/.pixi/envs/default/lib/perl5/site_perl/Bio/
+        Operating system being used: linux 
+=> Accessing Ontology
+        No ontology accessible from the gff file header!
+        We use the SOFA ontology distributed with AGAT:
+                /gpfs/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/.pixi/envs/default/lib/perl5/site_perl/auto/share/dist/AGAT/so.obo
+        Read ontology /gpfs/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/.pixi/envs/default/lib/perl5/site_perl/auto/share/dist/AGAT/so.obo:
+                4 root terms, and 2596 total terms, and 1516 leaf terms
+        Filtering ontology:
+                We found 1861 terms that are sequence_feature or is_a child of it.
+--------------------- collecting general data information ----------------------
+Parsing file ../Project2_Part3/campylomormyrus.gff
+=> Number of line in file: 8054450
+=> Number of comment lines: 16433
+=> Number of empty lines: 0
+=> Fasta included: No
+=> Number of features lines: 8038017
+=> Number of feature lines with 1 fields (while 9 expected): 16433
+=> Number of feature type (3rd column): 11
+        * Level1: 5 => contig expressed_sequence_match gene match protein_match
+        * level2: 2 => mRNA match_part
+        * level3: 4 => CDS exon five_prime_UTR three_prime_UTR
+        * unknown: 0 => 
+=> Version of the GFF parser selected by AGAT: 3
+
+-------- Start of in-depth analysis (file by chunck 1 CPU - 73 chuncks) --------
+Parsing: 100% [======================================================]D 0h10m44s
+Parsing (done in 644 seconds )
+---------------------------- Merging parallel tasks ----------------------------
+Merging: 100% [======================================================]D 0h01m21s
+Merging (done in 81 seconds )
+................................................................................
+.                           Total time: 740 seconds                            .
+.                          Total memory: 22166.04 Mo                           .
+................................................................................
+                            ------ END parsing ------                           
+converting to GTFrelax
+Formating output to GTFrelax
+
+--------------------------- Job done in 1092 seconds ---------------------------
+command : /gpfs/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/.pixi/envs/default/bin/agat_convert_sp_gff2gtf.pl --gff ../Project2_Part3/campylomormyrus.gff -o ../Project2_Part3/campylomormyrus.gtf
+date : 09/02/2026 at 16h40m27s
+Job done! Bye Bye!
+
+```
+
+cd into the working directory (not pixi dir) and run the STAR_align.sh script twice, once with the genome generate command uncommented out, then with the alignment command uncommented:
+
+[STAR_align.sh](Project2_QAA/STAR_align.sh)
+
+```bash 
+[hankap@n0097 Project2_Part3]$ chmod 755 STAR_align.sh 
+
+```
 
