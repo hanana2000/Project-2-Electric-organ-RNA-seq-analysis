@@ -97,11 +97,6 @@ pixi add Matplotlib
 pixi add HTSeq
 ```
 
-
-# Project2_Part3
-
-from PS8 Bi621, copy pasted STAR bash script. 
-
 downloaded gff and fasta files from [Dryad](https://datadryad.org/dataset/doi:10.5061/dryad.c59zw3rcj), and then used scp to copy the zip file to talapas: 
 ```bash 
 scp .\doi_10_5061_dryad_c59zw3rcj__v20230125.zip hankap@login2.talapas.uoregon.edu:/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3
@@ -111,6 +106,7 @@ then on talapas, unzipped the file:
 ```bash 
 unzip doi_10_5061_dryad_c59zw3rcj__v20230125.zip
 ```
+## convert gff to gtf 
 
 need to convert gff to gtf: 
 ```bash 
@@ -202,6 +198,10 @@ Job done! Bye Bye!
 
 ```
 
+## STAR bash script, alignments 
+
+from PS8 Bi621, copy pasted STAR bash script. 
+
 run the STAR_align.sh script twice, once with the genome generate command uncommented out, then with the alignment commands uncommented:
 
 [STAR_align.sh](Project2_QAA/STAR_align.sh)
@@ -251,7 +251,7 @@ file4=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analy
  --readFilesCommand zcat \
  --readFilesIn $file1 $file2 \
  --genomeDir $genomedir \
- --outFileNamePrefix yayay_
+ --outFileNamePrefix SRR25630305
 
  /usr/bin/time -v pixi run STAR \
  --runThreadN 8 \
@@ -262,8 +262,7 @@ file4=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analy
  --readFilesCommand zcat \
  --readFilesIn $file3 $file4 \
  --genomeDir $genomedir \
- --outFileNamePrefix yayay_
-
+ --outFileNamePrefix SRR25630397
 ```
 
 ```bash 
@@ -281,7 +280,145 @@ Command being timed: "pixi run STAR --runThreadN 8 --runMode genomeGenerate --ge
 	Maximum resident set size (kbytes): 23057984
 
 ```
-the genome generation took about 6 minutes and used 23MB memory
+the genome generation took about 6 minutes and used 23MB memory.
+
+slurm output for the alignments: 
+```bash 
+Command being timed: "pixi run STAR --runThreadN 8 --runMode alignReads --outFilterMultimapNmax 3 --outSAMunmapped Within KeepPairs --alignIntronMax 1000000 --alignMatesGapMax 1000000 --readFilesCommand zcat --readFilesIn /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630305_cut_fpair.fq.gz /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630305_cut_rpair.fq.gz --genomeDir /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/campyDB.STAR.2.7.11b --outFileNamePrefix SRR25630305"
+	User time (seconds): 466.78
+	System time (seconds): 2.00
+	Percent of CPU this job got: 578%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:21.03
+	Maximum resident set size (kbytes): 11206660
+
+Command being timed: "pixi run STAR --runThreadN 8 --runMode alignReads --outFilterMultimapNmax 3 --outSAMunmapped Within KeepPairs --alignIntronMax 1000000 --alignMatesGapMax 1000000 --readFilesCommand zcat --readFilesIn /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630397_cut_fpair.fq.gz /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part2/SRR25630397_cut_rpair.fq.gz --genomeDir /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/campyDB.STAR.2.7.11b --outFileNamePrefix SRR25630397"
+	User time (seconds): 449.29
+	System time (seconds): 2.27
+	Percent of CPU this job got: 670%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:07.35
+	Maximum resident set size (kbytes): 11234228
+```
+
+the alignments took less than 1.5 minutes and 11MB memory. 
+
+## count mapped and unmapped 
+
+now count the mapped and unmapped reads using the modified py script from PS8: 
+
+[countmapped.py](Project2_Part3/countmapped.py)
+
+```bash 
+[hankap@login3 Project2_QAA]$ cd ../Project2_Part3/
+[hankap@login3 Project2_Part3]$ chmod 755 countmapped.py 
+[hankap@login3 Project2_Part3]$ srun --account=bgmp --partition=bgmp --cpus-per-task=8 --time=1:00:00 --pty bash
+[hankap@n0097 Project2_Part3]$ ./countmapped.py 
+```
+
+result (from terminal): 
+
+```bash 
+for SRR25630305Aligned.out.sam
+there were 8317614 total reads in the file (including repeats)
+7681825 reads were mapped (not including repeats)
+635789 reads were unmapped (not including repeats)
+for SRR25630397Aligned.out.sam
+there were 19450210 total reads in the file (including repeats)
+10627292 reads were mapped (not including repeats)
+505304 reads were unmapped (not including repeats)
+
+```
+
+## htseq-count
+
+[htseq bash script](Project2_QAA/htseq.sh)
+
+```bash 
+#!/bin/bash
+#SBATCH --account=bgmp                    # REQUIRED: which account to use
+#SBATCH --partition=bgmp                  # REQUIRED: which partition to use
+#SBATCH --cpus-per-task=8                 # optional: number of cpus, default is 1
+#SBATCH --job-name=htseq             # optional: job name
+#SBATCH --time=1:00:00                    # optional: time before timesout 
+
+
+features_file=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campylomormyrus.gff
+sam1=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/SRR25630305Aligned.out.sam
+sam2=/projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/SRR25630397Aligned.out.sam
+
+/usr/bin/time -v pixi run htseq-count --stranded=yes -i Parent $sam1 $features_file > SRR25630305_str.txt
+/usr/bin/time -v pixi run htseq-count --stranded=reverse -i Parent $sam1 $features_file > SRR25630305_rev.txt
+
+/usr/bin/time -v pixi run htseq-count --stranded=yes -i Parent $sam2 $features_file > SRR25630397_str.txt
+/usr/bin/time -v pixi run htseq-count --stranded=reverse -i Parent $sam2 $features_file > SRR25630397_rev.txt
+
+```
+
+This bash script was used to count reads mapped to a gene from the sam files (alignment of fq trimmed reads forwards and reverse + gtf/full fasta genome file) when compared to the gene annotation file (gff). 
+
+```bash 
+sbatch htseq.sh 
+```
+
+to compare the outputs: 
+
+```bash 
+diff -y <(sort SRR25630305_str.txt) <(sort SRR25630305_rev.txt) > diff_SRR25630305_str_rev.txt
+diff -y <(sort SRR25630397_str.txt) <(sort SRR25630397_rev.txt) > diff_SRR25630397_str_rev.txt
+```
+because it output a diff at all (a non 0 length diff file), that means that the stranded=yes and stranded=reverse runs gave different results. 
+
+sum all the mapped reads (col2): 
+
+```bash
+awk '$1!~"__" {s+=$2} {sum+=$2} END {print s/sum}' SRR25630305_str.txt
+0.0256097
+awk '$1!~"__" {s+=$2} {sum+=$2} END {print s/sum}' SRR25630305_rev.txt
+0.436462
+
+awk '$1!~"__" {s+=$2} {sum+=$2} END {print s/sum}' SRR25630397_str.txt
+0.0299547
+awk '$1!~"__" {s+=$2} {sum+=$2} END {print s/sum}' SRR25630397_rev.txt
+0.553113
+
+```
+
+reverse runs had significantly more mappings. 
+
+
+slurm.out: 
+```bash 
+Command being timed: "pixi run htseq-count --stranded=yes -i Parent /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/SRR25630305Aligned.out.sam /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campylomormyrus.gff"
+	User time (seconds): 135.40
+	System time (seconds): 1.04
+	Percent of CPU this job got: 91%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:28.75
+	Maximum resident set size (kbytes): 155504
+
+Command being timed: "pixi run htseq-count --stranded=reverse -i Parent /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/SRR25630305Aligned.out.sam /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campylomormyrus.gff"
+	User time (seconds): 140.52
+	System time (seconds): 0.98
+	Percent of CPU this job got: 98%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:24.30
+	Maximum resident set size (kbytes): 154624
+
+Command being timed: "pixi run htseq-count --stranded=yes -i Parent /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/SRR25630397Aligned.out.sam /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campylomormyrus.gff"
+	User time (seconds): 173.79
+	System time (seconds): 0.94
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:54.86
+	Maximum resident set size (kbytes): 154564
+
+Command being timed: "pixi run htseq-count --stranded=reverse -i Parent /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_QAA/SRR25630397Aligned.out.sam /projects/bgmp/hankap/bioinfo/Bi623/Project-2-Electric-organ-RNA-seq-analysis/Project2_Part3/campylomormyrus.gff"
+	User time (seconds): 182.14
+	System time (seconds): 0.97
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:02.69
+	Maximum resident set size (kbytes): 155204
+
+```
+
+the runs took around 2.5-3 minutes each, and used less than 1MB of data. 
+
 
 
 
